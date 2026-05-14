@@ -8,10 +8,16 @@ The canonical programmatic source of truth for the [Oxide](https://github.com/ox
 bun add @oxidescheme/palette
 ```
 
+Or via JSR:
+
+```bash
+bunx jsr add @oxidescheme/palette
+```
+
 ## Usage
 
 ```ts
-import { colors, flavor, hex, rgb, byGroup, colorEntries } from "@oxidescheme/palette";
+import { colors, ansiColors, hex, rgb, byGroup } from "@oxidescheme/palette";
 
 // Access a specific color
 colors.teal.hex;        // "#00baaa"
@@ -25,14 +31,9 @@ rgb("teal");            // { r: 0, g: 186, b: 170 }
 // Group colors
 byGroup("accent");      // [[ "red", {...} ], [ "orange", {...} ], ...]
 
-// Full flavor object
-flavor.name;            // "Oxide"
-flavor.dark;            // true
-flavor.colorEntries;    // [...all color entries]
-flavor.ansiColorEntries;// [...all ANSI color entries]
-
-// Iterate
-colorEntries.map(([name, { hex }]) => `${name}: ${hex}`);
+// ANSI colors
+ansiColors.red.normal.hex;   // "#ed756e"
+ansiColors.red.bright.hex;   // "#ff9890"
 ```
 
 ## Color Groups
@@ -44,6 +45,28 @@ colorEntries.map(([name, { hex }]) => `${name}: ${hex}`);
 | `accent` | red, orange, yellow, green, teal, sky, blue, purple, pink |
 | `bright_accent` | bright_red, bright_orange, bright_yellow, bright_green, bright_teal, bright_sky, bright_blue, bright_purple, bright_pink |
 | `diff` | amber, jade, ice |
+
+## API
+
+### Exports
+
+| Export | Type | Description |
+|--------|------|-------------|
+| `colors` | `OxideColors` | Map of all oxide colors keyed by semantic name |
+| `ansiColors` | `OxideAnsiColors` | Map of ANSI terminal color groups |
+| `version` | `string` | Current palette version |
+
+### Helper Functions
+
+| Function | Returns | Description |
+|----------|---------|-------------|
+| `hex(name)` | `string` | Get hex code |
+| `rgb(name)` | `{ r, g, b }` | Get RGB values |
+| `hsl(name)` | `{ h, s, l }` | Get HSL values |
+| `oklch(name)` | `{ l, c, h }` | Get OKLCH values |
+| `group(name)` | `ColorGroup` | Get semantic group |
+| `isAccent(name)` | `boolean` | Check if color is an accent |
+| `byGroup(group)` | `[name, color][]` | Get all colors in a group |
 
 ## License
 
