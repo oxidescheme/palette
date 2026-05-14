@@ -1,12 +1,8 @@
 import definitions from "../palette.json" with { type: "json" };
 
-type Entries<T> = {
-  [K in keyof T]: [K, T[K]];
-}[keyof T][];
-
-const entriesFromObject = <T extends object>(obj: T): Entries<T> =>
-  Object.entries(obj) as Entries<T>;
-
+/**
+ * The semantic group a color belongs to.
+ */
 export type ColorGroup =
   | "surface"
   | "text"
@@ -14,13 +10,24 @@ export type ColorGroup =
   | "bright_accent"
   | "diff";
 
+/**
+ * Surface color names (backgrounds and UI surfaces).
+ */
 export type SurfaceColorName = "mantle" | "base" | "surface0" | "surface1";
+
+/**
+ * Text color names (primary and secondary text).
+ */
 export type TextColorName =
   | "bright_text"
   | "text"
   | "subtext0"
   | "subtext1"
   | "subtext2";
+
+/**
+ * Accent color names (primary palette colors).
+ */
 export type AccentColorName =
   | "red"
   | "orange"
@@ -31,6 +38,10 @@ export type AccentColorName =
   | "blue"
   | "purple"
   | "pink";
+
+/**
+ * Bright accent color names (ANSI bright variants).
+ */
 export type BrightAccentColorName =
   | "bright_red"
   | "bright_orange"
@@ -41,8 +52,15 @@ export type BrightAccentColorName =
   | "bright_blue"
   | "bright_purple"
   | "bright_pink";
+
+/**
+ * Diff color names (used for git diffs and change indicators).
+ */
 export type DiffColorName = "amber" | "jade" | "ice";
 
+/**
+ * Union of all valid oxide color names.
+ */
 export type OxideColorName =
   | SurfaceColorName
   | TextColorName
@@ -50,6 +68,9 @@ export type OxideColorName =
   | BrightAccentColorName
   | DiffColorName;
 
+/**
+ * A single color with all format representations.
+ */
 export type ColorFormat = Readonly<{
   name: string;
   order: number;
@@ -61,6 +82,9 @@ export type ColorFormat = Readonly<{
   group: ColorGroup;
 }>;
 
+/**
+ * ANSI terminal color name.
+ */
 export type AnsiName =
   | "black"
   | "red"
@@ -71,6 +95,9 @@ export type AnsiName =
   | "cyan"
   | "white";
 
+/**
+ * A single ANSI color entry with format representations.
+ */
 export type AnsiColorFormat = Readonly<{
   name: string;
   hex: string;
@@ -80,6 +107,9 @@ export type AnsiColorFormat = Readonly<{
   code: number;
 }>;
 
+/**
+ * An ANSI color group containing both normal and bright variants.
+ */
 export type AnsiColorGroups = Readonly<{
   name: string;
   order: number;
@@ -87,73 +117,79 @@ export type AnsiColorGroups = Readonly<{
   bright: AnsiColorFormat;
 }>;
 
+/**
+ * Map of all oxide colors keyed by name.
+ */
 export type OxideColors = Readonly<Record<OxideColorName, ColorFormat>>;
-export type OxideAnsiColors = Readonly<Record<AnsiName, AnsiColorGroups>>;
 
-export type OxideFlavor = Readonly<{
-  name: string;
-  dark: boolean;
-  colors: OxideColors;
-  ansiColors: OxideAnsiColors;
-  colorEntries: Entries<OxideColors>;
-  ansiColorEntries: Entries<OxideAnsiColors>;
-}>;
+/**
+ * Map of all ANSI color groups keyed by name.
+ */
+export type OxideAnsiColors = Readonly<Record<AnsiName, AnsiColorGroups>>;
 
 const typedColors = definitions.oxide.colors as Record<OxideColorName, ColorFormat>;
 const typedAnsiColors = definitions.oxide.ansiColors as Record<AnsiName, AnsiColorGroups>;
 
+/**
+ * The current version of the oxide palette.
+ */
 export const version: string = definitions.version;
 
-export const flavor: OxideFlavor = {
-  ...definitions.oxide,
-  colors: typedColors,
-  ansiColors: typedAnsiColors,
-  colorEntries: entriesFromObject(typedColors),
-  ansiColorEntries: entriesFromObject(typedAnsiColors),
-};
-
+/**
+ * All oxide colors keyed by their semantic name.
+ */
 export const colors: OxideColors = typedColors;
+
+/**
+ * ANSI terminal color mappings.
+ */
 export const ansiColors: OxideAnsiColors = typedAnsiColors;
 
-export const colorEntries: Entries<OxideColors> = entriesFromObject(typedColors);
-export const ansiColorEntries: Entries<OxideAnsiColors> = entriesFromObject(typedAnsiColors);
-
+/**
+ * Get the hex code for a color.
+ */
 export function hex(name: OxideColorName): string {
   return typedColors[name].hex;
 }
 
-export function rgb(name: OxideColorName): {
-  r: number;
-  g: number;
-  b: number;
-} {
+/**
+ * Get the RGB values for a color.
+ */
+export function rgb(name: OxideColorName): { r: number; g: number; b: number } {
   return typedColors[name].rgb;
 }
 
-export function oklch(name: OxideColorName): {
-  l: number;
-  c: number;
-  h: number;
-} {
+/**
+ * Get the OKLCH values for a color.
+ */
+export function oklch(name: OxideColorName): { l: number; c: number; h: number } {
   return typedColors[name].oklch;
 }
 
-export function hsl(name: OxideColorName): {
-  h: number;
-  s: number;
-  l: number;
-} {
+/**
+ * Get the HSL values for a color.
+ */
+export function hsl(name: OxideColorName): { h: number; s: number; l: number } {
   return typedColors[name].hsl;
 }
 
+/**
+ * Get the semantic group a color belongs to.
+ */
 export function group(name: OxideColorName): ColorGroup {
   return typedColors[name].group;
 }
 
+/**
+ * Check if a color is an accent color.
+ */
 export function isAccent(name: OxideColorName): boolean {
   return typedColors[name].accent;
 }
 
+/**
+ * Get all colors belonging to a specific semantic group.
+ */
 export function byGroup(g: ColorGroup): [OxideColorName, ColorFormat][] {
   return (Object.entries(typedColors) as [OxideColorName, ColorFormat][]).filter(
     ([, v]) => v.group === g,
