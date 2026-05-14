@@ -13,7 +13,7 @@ export type ColorGroup =
 /**
  * Surface color names (backgrounds and UI surfaces).
  */
-export type SurfaceColorName = "mantle" | "base" | "surface0" | "surface1";
+export type SurfaceColorName = "mantle" | "base" | "surface0" | "surface1" | "surface2";
 
 /**
  * Text color names (primary and secondary text).
@@ -32,6 +32,7 @@ export type AccentColorName =
   | "red"
   | "orange"
   | "yellow"
+  | "lime"
   | "green"
   | "teal"
   | "sky"
@@ -46,6 +47,7 @@ export type BrightAccentColorName =
   | "bright_red"
   | "bright_orange"
   | "bright_yellow"
+  | "bright_lime"
   | "bright_green"
   | "bright_teal"
   | "bright_sky"
@@ -56,7 +58,7 @@ export type BrightAccentColorName =
 /**
  * Diff color names (used for git diffs and change indicators).
  */
-export type DiffColorName = "amber" | "jade" | "ice";
+export type DiffColorName = "diff_delete" | "diff_add" | "diff_change";
 
 /**
  * Union of all valid oxide color names.
